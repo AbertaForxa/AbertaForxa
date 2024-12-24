@@ -1,5 +1,70 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
 
+:root {
+    --background: #252525;
+    --text: #ffffff;
+    --text-user: #d72929;
+    --text-path: #729fcf;
+}
+
 body {
     font-family: 'Ubuntu', sans-serif;
+    color: var(--text);
+    background: var(--background);
+    margin: 0;
+    height: 100%;
+    overflow: auto;
+}
+
+#terminal {
+    padding: 10px;
+    height: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.output {
+    white-space: pre-wrap;
+    margin-bottom: 10px;
+}
+
+.input-line {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.prompt {
+    margin-right: 5px;
+}
+
+#commandInput {
+    background: none;
+    border: none;
+    flex: 1;
+    outline: none;
+    caret-color: transparent;
+    white-space: pre;
+    word-wrap: break-word;
+}
+
+#commandInput:focus {
+    outline: none;
+    border: none;
+}
+
+#cursor {
+    width: 10px;
+    height: 20px;
+    background-color: white;
+    animation: blink 1s steps(2, start) infinite;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+@keyframes blink {
+    to {
+        visibility: hidden;
+    }
 }

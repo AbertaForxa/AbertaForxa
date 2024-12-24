@@ -9,9 +9,26 @@
         <title>Aberta Forza</title>
     </head>
     <body>
-        <h1>Aberta Forxa</h1>
-        <p>some text</p>
-        <div id="app"></div>
+        <main>
+            <header>
+                <h2>Aberta Forxa</h2>
+            </header>
+            <div id="terminal">
+                <div class="output" id="output"></div>
+                <div class="input-line">
+                    <div id="terminalContent"></div>
+                    <div
+                        id="commandInput"
+                        contenteditable="true"
+                        spellcheck="false"
+                        autofocus
+                        role="textbox"
+                        aria-label="Command input"
+                    ></div>
+                    <div id="cursor" class="cursor"></div>
+                </div>
+            </div>
+        </main>
         <script type="module" src="/src/main.js"></script>
     </body>
 </html>
