@@ -1,13 +1,20 @@
 import { Cursor } from './sripts/Cursor.js';
 import { InputCommands } from './sripts/InputCommands.js';
 import { InputFocus } from './sripts/InputFocus.js';
-import { bash_commands } from './utils/bash.js';
+import { bash_commands, bash_navigation_list } from './utils/bash.js';
 
 document.addEventListener('DOMContentLoaded', function () {
     try {
         new Cursor('commandInput', '.input-line', 'cursor');
     } catch (error) {
         console.error(error.message);
+    }
+    let firstLoad = true;
+    if (firstLoad) {
+        const current_path = InputCommands.get_current_path();
+        const path = document.getElementById('path');
+        path.textContent = current_path.path;
+        firstLoad = false;
     }
 
     InputFocus.always_focus_on_command_input();
@@ -16,8 +23,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     commandInput.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
-            add_executed_command(this.textContent);
             event.preventDefault();
+            add_executed_command(this.textContent);
             if (this.textContent !== '') {
                 const splitedCommand = this.textContent
                     .trim()
@@ -41,11 +48,13 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function add_executed_command(command) {
+    const current_path = InputCommands.get_current_path();
+    console.log(current_path);
     const div = `
         <div class="last-command">
             <div class="path-content">
                 <span class="user">aberta_forxa</span>
-                <span class="path">~/Desktop</span>
+                <span class="path">${current_path.path}</span>
                 <span>$</span>
             </div>
             <span>${command}</span>
@@ -61,8 +70,7 @@ const commands = {
     ls: () => execute_ls_command(),
     history: () => execute_history_command(),
     clear: () => execute_clear_command(),
-    cd: (executed_command, argument) =>
-        execute_cd_command(executed_command, argument),
+    cd: (executed_command, argument) => execute_cd_command(argument),
 };
 
 function execute_command(executed_command, argument) {
@@ -93,7 +101,19 @@ function execute_clear_command() {
 
 function execute_cat_command() {}
 
-function execute_cd_command(executed_command, argument) {
-    console.log(executed_command);
-    console.log(argument);
+function execute_cd_command(argument) {
+    if (argument === undefined) {
+        InputCommands.set_current_path('~');
+        const path = document.getElementById('path');
+        path.textContent = '~';
+    }
+    if (argument) {
+        bash_navigation_list.forEach((nav) => {
+            if (nav.path === argument) {
+                InputCommands.set_current_path(argument);
+                const path = document.getElementById('path');
+                path.textContent = argument;
+            }
+        });
+    }
 }
