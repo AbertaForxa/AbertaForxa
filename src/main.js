@@ -27,24 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 );
 
                 if (containBashCommand) {
-                    if (splitedCommand[0] === 'history') {
-                        const list_of_history_commands =
-                            InputCommands.get_storage_commands();
-                        const output = document.getElementById('output');
-                        list_of_history_commands.forEach((command) => {
-                            const container = document.createElement('div');
-
-                            const span = document.createElement('span');
-                            span.textContent = `${command.id} ${command.command}`;
-                            container.appendChild(span);
-                            output.appendChild(container);
-                        });
-                    }
-
-                    if (splitedCommand[0] === 'clear') {
-                        const output = document.getElementById('output');
-                        output.innerHTML = '';
-                    }
+                    execute_command(splitedCommand[0].trim());
                 }
                 InputCommands.storage_commands(this.textContent);
                 this.textContent = '';
@@ -52,3 +35,35 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+const commands = {
+    ls: () => execute_command(),
+    history: () => execute_history_command(),
+    clear: () => execute_clear_command(),
+};
+
+function execute_command(command) {
+    commands[`${command}`]();
+}
+
+function execute_ls_command() {}
+
+function execute_history_command() {
+    const list_of_history_commands = InputCommands.get_storage_commands();
+    const output = document.getElementById('output');
+    list_of_history_commands.forEach((command) => {
+        const container = document.createElement('div');
+
+        const span = document.createElement('span');
+        span.textContent = `${command.id} ${command.command}`;
+        container.appendChild(span);
+        output.appendChild(container);
+    });
+}
+
+function execute_clear_command() {
+    const output = document.getElementById('output');
+    output.innerHTML = '';
+}
+
+function execute_cat_command() {}
