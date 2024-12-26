@@ -25,6 +25,13 @@ export class InputCommands {
 
     static get_storage_commands() {
         const listOfCommands = localStorage.getItem('commands');
-        return JSON.parse(listOfCommands);
+        if (!listOfCommands) return [];
+
+        let commands = JSON.parse(listOfCommands);
+        if (commands.length >= 10) {
+            commands = commands.slice(Math.max(commands.length - 10, 1));
+        }
+
+        return commands;
     }
 }

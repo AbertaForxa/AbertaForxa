@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     commandInput.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
+            add_executed_command(this.textContent);
             event.preventDefault();
             if (this.textContent !== '') {
                 const splitedCommand = this.textContent
@@ -27,7 +28,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 );
 
                 if (containBashCommand) {
-                    execute_command(splitedCommand[0].trim());
+                    execute_command(
+                        splitedCommand[0].trim(),
+                        splitedCommand[1]?.trim(),
+                    );
                 }
                 InputCommands.storage_commands(this.textContent);
                 this.textContent = '';
@@ -36,14 +40,33 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+function add_executed_command(command) {
+    const div = `
+        <div class="last-command">
+            <div class="path-content">
+                <span class="user">aberta_forxa</span>
+                <span class="path">~/Desktop</span>
+                <span>$</span>
+            </div>
+            <span>${command}</span>
+        </div>
+
+    `;
+
+    const output = document.getElementById('output');
+    output.insertAdjacentHTML('beforeend', div);
+}
+
 const commands = {
-    ls: () => execute_command(),
+    ls: () => execute_ls_command(),
     history: () => execute_history_command(),
     clear: () => execute_clear_command(),
+    cd: (executed_command, argument) =>
+        execute_cd_command(executed_command, argument),
 };
 
-function execute_command(command) {
-    commands[`${command}`]();
+function execute_command(executed_command, argument) {
+    commands[`${executed_command}`](executed_command, argument);
 }
 
 function execute_ls_command() {}
@@ -51,14 +74,16 @@ function execute_ls_command() {}
 function execute_history_command() {
     const list_of_history_commands = InputCommands.get_storage_commands();
     const output = document.getElementById('output');
-    list_of_history_commands.forEach((command) => {
-        const container = document.createElement('div');
+    if (list_of_history_commands.length > 0) {
+        list_of_history_commands.forEach((command) => {
+            const container = document.createElement('div');
 
-        const span = document.createElement('span');
-        span.textContent = `${command.id} ${command.command}`;
-        container.appendChild(span);
-        output.appendChild(container);
-    });
+            const span = document.createElement('span');
+            span.textContent = `${command.id} ${command.command}`;
+            container.appendChild(span);
+            output.appendChild(container);
+        });
+    }
 }
 
 function execute_clear_command() {
@@ -67,3 +92,8 @@ function execute_clear_command() {
 }
 
 function execute_cat_command() {}
+
+function execute_cd_command(executed_command, argument) {
+    console.log(executed_command);
+    console.log(argument);
+}

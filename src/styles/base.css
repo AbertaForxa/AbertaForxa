@@ -16,6 +16,12 @@ body {
     overflow: auto;
 }
 
+header {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
 .path-content {
     display: flex;
     align-items: center;
@@ -40,8 +46,13 @@ body {
 }
 
 .output {
-    white-space: pre-wrap;
-    margin-bottom: 10px;
+    height: auto;
+}
+
+.last-command {
+    display: flex;
+    align-items: center;
+    width: 100%;
 }
 
 .input-line {
