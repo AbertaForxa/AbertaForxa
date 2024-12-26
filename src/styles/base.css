@@ -16,6 +16,22 @@ body {
     overflow: auto;
 }
 
+.path-content {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.user {
+    color: var(--text-user);
+    user-select: none;
+}
+
+.path {
+    color: var(--text-path);
+    user-select: none;
+}
+
 #terminal {
     padding: 10px;
     height: 100%;
@@ -31,11 +47,21 @@ body {
 .input-line {
     display: flex;
     align-items: center;
+    width: 100%;
     position: relative;
 }
 
 .prompt {
     margin-right: 5px;
+}
+
+[contenteditable='true']#commandInput br {
+    display: none;
+}
+
+[contenteditable='true']#commandInput * {
+    display: inline;
+    white-space: nowrap;
 }
 
 #commandInput {

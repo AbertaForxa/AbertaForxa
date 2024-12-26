@@ -17,7 +17,10 @@ export class Cursor {
         this.placeCursorAtEnd = this.placeCursorAtEnd.bind(this);
 
         this.commandInput.addEventListener('input', this.handleInput);
-        this.commandInput.addEventListener('keydown', this.placeCursorAtEnd);
+        this.commandInput.addEventListener('keydown', () => {
+            this.placeCursorAtEnd();
+            this.updateCursorPosition();
+        });
         this.commandInput.addEventListener('keyup', this.handleInput);
         this.commandInput.addEventListener('click', this.handleInput);
 
@@ -27,20 +30,36 @@ export class Cursor {
 
     updateCursorPosition(event) {
         const selection = window.getSelection();
-        if (selection.rangeCount === 0) return;
+        if (selection.rangeCount === 0) {
+            return;
+        }
 
+        // Delete the <br> element to appear when user delete all the content from
+        // contenteditable element
+        if (
+            this.commandInput.innerHTML === '<br>' ||
+            this.commandInput.innerHTML === ''
+        ) {
+            this.commandInput.innerHTML = '';
+        }
+        if (!this.commandInput.hasChildNodes()) {
+            // if there is on content in contenteditable element place the cursor at the beggining
+            const pathContent = document.getElementById('pathContent');
+            const pathContentLeft = pathContent.getBoundingClientRect();
+
+            this.cursor.style.left = `${pathContentLeft.width + 12}px`;
+            this.cursor.style.top = '0px';
+
+            return;
+        }
         const range = selection.getRangeAt(0).cloneRange();
         range.collapse(false);
 
         const rect = range.getBoundingClientRect();
-
-        //const inputLine = document.querySelector('.input-line');
         const inputRect = this.inputLine.getBoundingClientRect();
 
         const cursorTop = rect.top - inputRect.top;
         const cursorLeft = rect.left - inputRect.left;
-
-        //const cursor = document.getElementById('cursor');
         this.cursor.style.top = `${cursorTop}px`;
         this.cursor.style.left = `${cursorLeft}px`;
     }
