@@ -11,7 +11,10 @@
     <body>
         <main>
             <header>
-                <h2>Aberta Forxa</h2>
+                <span>some text</span>
+                <span>some text</span>
+                <span>some text</span>
+                <span>some text</span>
             </header>
             <div id="terminal">
                 <div class="output" id="output"></div>
@@ -19,13 +22,17 @@
                     <div id="pathContent" class="path-content">
                         <span class="user">aberta_forxa</span>
                         <span class="path">~/Desktop</span>
+                        <span>$</span>
                     </div>
                     <div
                         id="commandInput"
-                        contenteditable="true"
+                        contenteditable="plaintext-only"
                         spellcheck="false"
+                        autocorrect="false"
+                        auutocapitalize="none"
                         autofocus
                         role="textbox"
+                        tabindex="-1"
                         aria-label="Command input"
                     ></div>
                     <div id="cursor" class="cursor"></div>
