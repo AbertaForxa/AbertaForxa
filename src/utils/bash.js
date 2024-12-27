@@ -1,4 +1,12 @@
-export const bash_commands = ['ls', 'cd', 'clear', 'history', 'git', '--help'];
+export const bash_commands = [
+    'ls',
+    'cd',
+    'clear',
+    'history',
+    'git',
+    'vim',
+    '--help',
+];
 
 export const bash_navigation_list = [
     {

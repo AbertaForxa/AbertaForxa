@@ -1,6 +1,7 @@
 import { Cursor } from './sripts/Cursor.js';
 import { Helper } from './sripts/Helper.js';
 import { InputCommands } from './sripts/InputCommands.js';
+import { Vim } from './sripts/Vim.js';
 import {
     bash_commands,
     bash_navigation_list,
@@ -86,6 +87,8 @@ const commands = {
     cd: (executed_command, argument) => execute_cd_command(argument),
     '--help': () => execute_help_command(),
     git: () => execute_git_command(),
+    vim: (executed_command, argument) =>
+        execute_vim_command(executed_command, argument),
 };
 
 function execute_command(executed_command, argument) {
@@ -161,4 +164,8 @@ function execute_git_command() {
         <span>Github repo: <a href="https://github.com/AbertaForxa/AbertaForxa" target="__blank">Aberta Froxa</a></span>
     `;
     output.insertAdjacentHTML('beforeend', link);
+}
+
+function execute_vim_command(executed_command, argument) {
+    Vim.show_modal(argument);
 }
