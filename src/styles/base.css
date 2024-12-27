@@ -195,3 +195,12 @@ a {
     align-items: center;
     gap: 12px;
 }
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    text-align: left;
+    min-width: 80px;
+}

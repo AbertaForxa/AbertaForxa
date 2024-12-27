@@ -75,7 +75,7 @@ function add_executed_command(command) {
         <div class="last-command">
             <div class="path-content">
                 <span class="user">aberta_forxa</span>
-<span class="path">${current_path.path === '~' ? current_path.path : `~/${current_path.path}`}</span>
+                <span class="path">${current_path.path === '~' ? current_path.path : `~/${current_path.path}`}</span>
                 <span>$</span>
             </div>
             <span>${command}</span>
@@ -88,7 +88,7 @@ function add_executed_command(command) {
 }
 
 const commands = {
-    ls: () => execute_ls_command(),
+    ls: (executed_command, argument) => execute_ls_command(argument),
     history: () => execute_history_command(),
     clear: () => execute_clear_command(),
     cd: (executed_command, argument) => execute_cd_command(argument),
@@ -102,21 +102,60 @@ function execute_command(executed_command, argument) {
     commands[`${executed_command}`](executed_command, argument);
 }
 
-function execute_ls_command() {
+function create_tr_content(list) {
+    return list
+        .map((content) => {
+            const permitions =
+                content.type === 2 ? 'drwxr-xr-x@' : '-rw-r--r--@';
+            const links = '1';
+            const owner = 'abertaforxa';
+            const group = 'stuff';
+            const size = 'xxx';
+            const name = content.name;
+
+            return `
+            <tr>
+                <td>${permitions}</td>
+                <td>${links}</td>
+                <td>${owner}</td>
+                <td>${group}</td>
+                <td>${size}</td>
+                <td>${name}</td>
+            </tr>
+        `;
+        })
+        .join('');
+}
+
+function execute_ls_command(argument) {
     const storage_path = localStorage.getItem('current_path');
     const currentPathParsed = JSON.parse(storage_path);
 
     const output = document.getElementById('output');
-    const container = document.createElement('div');
-    container.classList.add('ls-container');
 
-    currentPathParsed.children.forEach((child) => {
-        const span = document.createElement('span');
-        span.textContent = child.name;
-        container.appendChild(span);
-    });
+    if (argument && ['-la', '-l', '-ll'].includes(argument)) {
+        const trContent = create_tr_content(currentPathParsed.children);
+        const table = `
+            <table>
+                <tbody>
+                     ${trContent}
+                </tbody>
+            </table>
+        `;
 
-    output.appendChild(container);
+        output.insertAdjacentHTML('beforeend', table);
+    } else {
+        const container = document.createElement('div');
+        container.classList.add('ls-container');
+
+        currentPathParsed.children.forEach((child) => {
+            const span = document.createElement('span');
+            span.textContent = child.name;
+            container.appendChild(span);
+        });
+
+        output.appendChild(container);
+    }
 }
 
 function execute_history_command() {
@@ -138,8 +177,6 @@ function execute_clear_command() {
     const output = document.getElementById('output');
     output.innerHTML = '';
 }
-
-function execute_cat_command() {}
 
 function execute_cd_command(argument) {
     if (argument === undefined) {
