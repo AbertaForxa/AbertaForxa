@@ -17,6 +17,14 @@ document.addEventListener('DOMContentLoaded', function () {
         firstLoad = false;
     }
 
+    window.addEventListener(
+        'storage',
+        function () {
+            // TODO: Check if storage contains objects
+        },
+        false,
+    );
+
     InputFocus.always_focus_on_command_input();
 
     const commandInput = document.getElementById('commandInput');
