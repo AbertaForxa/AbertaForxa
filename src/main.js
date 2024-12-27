@@ -1,7 +1,11 @@
 import { Cursor } from './sripts/Cursor.js';
 import { InputCommands } from './sripts/InputCommands.js';
 import { InputFocus } from './sripts/InputFocus.js';
-import { bash_commands, bash_navigation_list } from './utils/bash.js';
+import {
+    bash_commands,
+    bash_navigation_list,
+    help_commands_list,
+} from './utils/bash.js';
 
 document.addEventListener('DOMContentLoaded', function () {
     try {
@@ -79,6 +83,7 @@ const commands = {
     history: () => execute_history_command(),
     clear: () => execute_clear_command(),
     cd: (executed_command, argument) => execute_cd_command(argument),
+    '--help': () => execute_help_command(),
 };
 
 function execute_command(executed_command, argument) {
@@ -124,4 +129,26 @@ function execute_cd_command(argument) {
             }
         });
     }
+}
+
+function execute_help_command() {
+    const output = document.getElementById('output');
+    const div = document.createElement('div');
+    div.classList.add('help-commands');
+
+    help_commands_list.forEach((hc) => {
+        const name = document.createElement('span');
+        const description = document.createElement('span');
+        const parameters = document.createElement('span');
+
+        name.textContent = hc.name;
+        description.textContent = hc.description;
+        parameters.textContent = hc.parameters;
+
+        div.appendChild(name);
+        div.appendChild(description);
+        div.appendChild(parameters);
+    });
+
+    output.appendChild(div);
 }
