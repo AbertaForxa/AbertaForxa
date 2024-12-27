@@ -9,7 +9,7 @@ export class Helper {
         let currentBars = 0;
 
         const increment = 1;
-        const intervalTime = 650;
+        const intervalTime = 850;
 
         setInterval(() => {
             progressText.textContent = `$ ${Math.round(currentPercent)}% [`;
