@@ -22,14 +22,22 @@ document.addEventListener('DOMContentLoaded', function () {
     if (firstLoad) {
         const current_path = InputCommands.get_current_path();
         const path = document.getElementById('path');
-        path.textContent = current_path.path;
+        path.textContent =
+            current_path.path === '~'
+                ? current_path.path
+                : `~/${current_path.path}`;
         firstLoad = false;
     }
 
     window.addEventListener(
         'storage',
         function () {
-            // TODO: Check if storage contains objects
+            const current_path = localStorage.getItem('current_path');
+            if (!current_path) {
+                InputCommands.set_current_path('~');
+                const path = document.getElementById('path');
+                path.textContent = '~';
+            }
         },
         false,
     );
@@ -63,12 +71,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function add_executed_command(command) {
     const current_path = InputCommands.get_current_path();
-    console.log(current_path);
     const div = `
         <div class="last-command">
             <div class="path-content">
                 <span class="user">aberta_forxa</span>
-                <span class="path">${current_path.path}</span>
+<span class="path">${current_path.path === '~' ? current_path.path : `~/${current_path.path}`}</span>
                 <span>$</span>
             </div>
             <span>${command}</span>
@@ -95,7 +102,22 @@ function execute_command(executed_command, argument) {
     commands[`${executed_command}`](executed_command, argument);
 }
 
-function execute_ls_command() {}
+function execute_ls_command() {
+    const storage_path = localStorage.getItem('current_path');
+    const currentPathParsed = JSON.parse(storage_path);
+
+    const output = document.getElementById('output');
+    const container = document.createElement('div');
+    container.classList.add('ls-container');
+
+    currentPathParsed.children.forEach((child) => {
+        const span = document.createElement('span');
+        span.textContent = child.name;
+        container.appendChild(span);
+    });
+
+    output.appendChild(container);
+}
 
 function execute_history_command() {
     const list_of_history_commands = InputCommands.get_storage_commands();
@@ -126,11 +148,14 @@ function execute_cd_command(argument) {
         path.textContent = '~';
     }
     if (argument) {
-        bash_navigation_list.forEach((nav) => {
-            if (nav.path === argument) {
+        const current_path = JSON.parse(localStorage.getItem('current_path'));
+        console.log(current_path);
+
+        current_path.children.forEach((nav) => {
+            if (nav.name === argument && nav.type === 2) {
                 InputCommands.set_current_path(argument);
                 const path = document.getElementById('path');
-                path.textContent = argument;
+                path.textContent = '~/' + argument;
             }
         });
     }
@@ -167,5 +192,13 @@ function execute_git_command() {
 }
 
 function execute_vim_command(executed_command, argument) {
-    Vim.show_modal(argument);
+    const current_path = localStorage.getItem('current_path');
+    const parsedCurrentPath = JSON.parse(current_path);
+
+    const isFileExist = parsedCurrentPath.children.some(
+        (post) => post.name === argument.trim(),
+    );
+
+    if (isFileExist) Vim.show_modal(argument);
+    //Vim.show_modal(argument);
 }

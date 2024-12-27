@@ -189,3 +189,9 @@ a {
 .vim-modal.show {
     display: block;
 }
+
+.ls-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
