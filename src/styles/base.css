@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 
 :root {
     --background: #252525;
@@ -8,7 +8,7 @@
 }
 
 body {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'JetBrains Mono', sans-serif;
     color: var(--text);
     background: var(--background);
     margin: 0;
@@ -18,8 +18,18 @@ body {
 
 header {
     padding: 10px;
-    display: flex;
-    flex-direction: column;
+}
+
+header pre {
+    font-size: 0.7rem;
+    page-break-inside: avoid;
+    font-family: monospace;
+    line-height: 1.6;
+    max-width: 100%;
+    overflow: auto;
+    display: block;
+    word-wrap: break-word;
+    margin-bottom: -46px;
 }
 
 .path-content {
@@ -104,4 +114,15 @@ header {
     to {
         visibility: hidden;
     }
+}
+
+a {
+    color: var(--text);
+}
+
+.help-commands {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
 }

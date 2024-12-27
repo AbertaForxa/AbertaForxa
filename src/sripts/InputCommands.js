@@ -1,3 +1,5 @@
+import { bash_navigation_list } from '../utils/bash.js';
+
 export class InputCommands {
     static storage_commands(command) {
         const storageList = localStorage.getItem('commands');
@@ -33,5 +35,20 @@ export class InputCommands {
         }
 
         return commands;
+    }
+
+    static get_current_path() {
+        const storage_path = localStorage.getItem('current_path');
+        if (!storage_path) return bash_navigation_list[0];
+
+        const path = JSON.parse(storage_path);
+        return path;
+    }
+
+    static set_current_path(current_path) {
+        const path = bash_navigation_list.filter(
+            (nav) => nav.path === current_path.trim(),
+        );
+        localStorage.setItem('current_path', JSON.stringify(path[0]));
     }
 }

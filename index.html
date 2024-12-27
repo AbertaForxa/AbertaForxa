@@ -11,17 +11,30 @@
     <body>
         <main>
             <header>
-                <span>some text</span>
-                <span>some text</span>
-                <span>some text</span>
-                <span>some text</span>
+                <pre>
+                    <code>
+$ ---------------------------------------------------------------------------------------
+ █████╗ ██████╗ ███████╗██████╗ ████████╗ █████╗ ███████╗ ██████╗ ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██╔══██╗██╔════╝██╔══██╗╚══██╔══╝██╔══██╗██╔════╝██╔═══██╗██╔══██╗╚██╗██╔╝██╔══██╗
+███████║██████╔╝█████╗  ██████╔╝   ██║   ███████║█████╗  ██║   ██║██████╔╝ ╚███╔╝ ███████║
+██╔══██║██╔══██╗██╔══╝  ██╔══██╗   ██║   ██╔══██║██╔══╝  ██║   ██║██╔══██╗ ██╔██╗ ██╔══██║
+██║  ██║██████╔╝███████╗██║  ██║   ██║   ██║  ██║██║     ╚██████╔╝██║  ██║██╔╝ ██╗██║  ██║
+╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝      ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝
+$ Loading node_modules files...
+$ this operation will take approximately: forever
+<div id="progressDiv"></div>
+<code id="progressText">$ 0% [>                                        ]</code>
+$ meanwhile to interract with the page execute --help command to see available options
+$ ---------------------------------------------------------------------------------------
+                    </code>
+                </pre>
             </header>
             <div id="terminal">
                 <div class="output" id="output"></div>
                 <div class="input-line">
                     <div id="pathContent" class="path-content">
                         <span class="user">aberta_forxa</span>
-                        <span class="path">~/Desktop</span>
+                        <span class="path" id="path"></span>
                         <span>$</span>
                     </div>
                     <div
