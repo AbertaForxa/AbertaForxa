@@ -21,9 +21,15 @@ header {
 }
 
 header pre {
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 0.8rem;
-    margin: 0;
+    font-size: 0.7rem;
+    page-break-inside: avoid;
+    font-family: monospace;
+    line-height: 1.6;
+    max-width: 100%;
+    overflow: auto;
+    display: block;
+    word-wrap: break-word;
+    margin-bottom: -46px;
 }
 
 .path-content {
@@ -108,6 +114,10 @@ header pre {
     to {
         visibility: hidden;
     }
+}
+
+a {
+    color: var(--text);
 }
 
 .help-commands {

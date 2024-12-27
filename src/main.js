@@ -1,6 +1,6 @@
 import { Cursor } from './sripts/Cursor.js';
+import { Helper } from './sripts/Helper.js';
 import { InputCommands } from './sripts/InputCommands.js';
-import { InputFocus } from './sripts/InputFocus.js';
 import {
     bash_commands,
     bash_navigation_list,
@@ -13,6 +13,10 @@ document.addEventListener('DOMContentLoaded', function () {
     } catch (error) {
         console.error(error.message);
     }
+
+    Helper.animate_progress_bar();
+    Helper.always_focus_on_command_input();
+
     let firstLoad = true;
     if (firstLoad) {
         const current_path = InputCommands.get_current_path();
@@ -29,10 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
         false,
     );
 
-    InputFocus.always_focus_on_command_input();
-
     const commandInput = document.getElementById('commandInput');
-
     commandInput.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
             event.preventDefault();
@@ -84,6 +85,7 @@ const commands = {
     clear: () => execute_clear_command(),
     cd: (executed_command, argument) => execute_cd_command(argument),
     '--help': () => execute_help_command(),
+    git: () => execute_git_command(),
 };
 
 function execute_command(executed_command, argument) {
@@ -151,4 +153,12 @@ function execute_help_command() {
     });
 
     output.appendChild(div);
+}
+
+function execute_git_command() {
+    const output = document.getElementById('output');
+    const link = `
+        <span>Github repo: <a href="https://github.com/AbertaForxa/AbertaForxa" target="__blank">Aberta Froxa</a></span>
+    `;
+    output.insertAdjacentHTML('beforeend', link);
 }
