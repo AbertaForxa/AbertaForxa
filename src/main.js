@@ -2,11 +2,7 @@ import { Cursor } from './sripts/Cursor.js';
 import { Helper } from './sripts/Helper.js';
 import { InputCommands } from './sripts/InputCommands.js';
 import { Vim } from './sripts/Vim.js';
-import {
-    bash_commands,
-    bash_navigation_list,
-    help_commands_list,
-} from './utils/bash.js';
+import { bash_commands, help_commands_list } from './utils/bash.js';
 
 document.addEventListener('DOMContentLoaded', function () {
     try {
@@ -46,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function () {
     commandInput.addEventListener('keydown', function (event) {
         if (event.key === 'Tab') {
             event.preventDefault();
-            console.log('clicked tab');
             const splited_command = this.textContent
                 .trim()
                 .split(' ')

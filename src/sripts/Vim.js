@@ -1,4 +1,4 @@
-import { fetch_blog } from '../utils/fetch_blog.js';
+import { fetch_data } from '../utils/fetch_data.js';
 
 export class Vim {
     static originalLinesContent = null;
@@ -6,7 +6,7 @@ export class Vim {
     static totalLines = 38;
 
     static show_modal(file_name) {
-        const data = fetch_blog(file_name);
+        const data = fetch_data(file_name);
 
         const modal_div = document.getElementById('vimModal');
         modal_div.classList.add('show');

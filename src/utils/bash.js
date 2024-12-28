@@ -25,10 +25,7 @@ export const bash_navigation_list = [
         path: 'about',
         type: 2,
         root: false,
-        children: [
-            { id: 1, name: 'test.txt', type: 1 },
-            { id: 2, name: 'test2.txt', type: 1 },
-        ],
+        children: [{ id: 1, name: 'about', type: 1 }],
     },
     {
         id: 3,
