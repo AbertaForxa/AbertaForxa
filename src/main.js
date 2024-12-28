@@ -44,6 +44,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const commandInput = document.getElementById('commandInput');
     commandInput.addEventListener('keydown', function (event) {
+        if (event.key === 'Tab') {
+            event.preventDefault();
+            console.log('clicked tab');
+            const splited_command = this.textContent
+                .trim()
+                .split(' ')
+                .filter((c) => c !== '');
+
+            if (splited_command[1]) {
+                const current_path = JSON.parse(
+                    localStorage.getItem('current_path'),
+                );
+
+                const result = current_path.children.find((obj) =>
+                    obj.name.includes(splited_command[1]),
+                );
+                if (result) {
+                    this.textContent = `${splited_command[0]} ${result.name}`;
+                }
+            }
+        }
+
         if (event.key === 'Enter') {
             event.preventDefault();
             add_executed_command(this.textContent);
