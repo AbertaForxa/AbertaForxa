@@ -1,4 +1,41 @@
 export class Helper {
+    static get_full_path_string(node) {
+        if (!node.parent) return '~';
+
+        const pathParts = [];
+        let currentNode = node;
+        while (currentNode?.parent) {
+            pathParts.push(currentNode.path);
+            currentNode = currentNode.parent;
+        }
+
+        pathParts.reverse();
+        return `~/${pathParts.join('/')}`;
+    }
+    static find_node_by_path_and_level(path, level, node) {
+        if (node.path === path && node.level === level) return node;
+        if (node.children) {
+            for (const child of node.children) {
+                const result = Helper.find_node_by_path_and_level(
+                    path,
+                    level,
+                    child,
+                );
+                if (result) return result;
+            }
+        }
+        return null;
+    }
+
+    static build_tree_with_parents(node, parent = null) {
+        node.parent = parent;
+        if (node.children && node.children.length > 0) {
+            node.children.forEach((child) =>
+                Helper.build_tree_with_parents(child, node),
+            );
+        }
+    }
+
     static animate_progress_bar() {
         const progressText = document.getElementById('progressText');
         const progressDiv = document.getElementById('progressDiv');

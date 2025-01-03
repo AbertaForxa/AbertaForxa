@@ -12,8 +12,7 @@ export class InputCommands {
             ];
             localStorage.setItem('commands', JSON.stringify(newCommand));
         } else {
-            const storageCommand = localStorage.getItem('commands');
-            const listOfCommands = JSON.parse(storageCommand);
+            const listOfCommands = JSON.parse(storageList);
 
             const newObj = {
                 id: listOfCommands.length + 1,
@@ -44,11 +43,14 @@ export class InputCommands {
         const path = JSON.parse(storage_path);
         return path;
     }
-
-    static set_current_path(current_path) {
-        const path = bash_navigation_list.filter(
-            (nav) => nav.path === current_path.trim(),
+    static set_current_path(currentPath) {
+        const foundedPath = InputCommands.find_path(
+            currentPath,
+            bash_navigation_list,
         );
-        localStorage.setItem('current_path', JSON.stringify(path[0]));
+
+        if (foundedPath) {
+            localStorage.setItem('current_path', JSON.stringify(foundedPath));
+        }
     }
 }
