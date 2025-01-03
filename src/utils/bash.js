@@ -8,6 +8,90 @@ export const bash_commands = [
     '--help',
 ];
 
+export const NavigationType = {
+    file: 1,
+    directory: 2,
+    link: 3,
+};
+
+export const TERMINAL_NAVIGATION = [
+    {
+        path: '~',
+        type: NavigationType.directory,
+        level: 1,
+        children: [
+            {
+                path: 'about',
+                level: 2,
+                type: NavigationType.directory,
+                children: [
+                    { name: 'about', level: 3, type: NavigationType.file },
+                ],
+            },
+            {
+                path: 'works',
+
+                level: 2,
+                type: NavigationType.directory,
+                children: [
+                    { name: 'test1', level: 3, type: NavigationType.link },
+                    { name: 'test', level: 3, type: NavigationType.link },
+                ],
+            },
+            {
+                path: 'blog',
+                level: 2,
+                type: NavigationType.directory,
+                children: [
+                    {
+                        path: 'programming',
+                        level: 3,
+                        type: NavigationType.directory,
+                        children: [
+                            {
+                                path: 'javascript',
+                                level: 4,
+                                type: NavigationType.directory,
+                                children: [
+                                    {
+                                        name: 'javascript',
+                                        level: 5,
+                                        type: NavigationType.file,
+                                    },
+                                ],
+                            },
+                            {
+                                path: 'nodejs',
+                                level: 4,
+                                type: NavigationType.directory,
+                                children: [
+                                    {
+                                        name: 'node',
+                                        level: 5,
+                                        type: NavigationType.file,
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        path: 'algorithms',
+                        level: 3,
+                        type: NavigationType.directory,
+                        children: [],
+                    },
+                    {
+                        path: 'data_structures',
+                        level: 3,
+                        type: NavigationType.directory,
+                        children: [],
+                    },
+                ],
+            },
+        ],
+    },
+];
+
 export const bash_navigation_list = [
     {
         id: 1,
@@ -15,9 +99,9 @@ export const bash_navigation_list = [
         type: 2,
         root: true,
         children: [
-            { id: 1, name: 'about', type: 2 },
-            { id: 2, name: 'works', type: 2 },
-            { id: 3, name: 'blog', type: 2 },
+            { id: 1, path: 'about', type: 2 },
+            { id: 2, path: 'works', type: 2 },
+            { id: 3, path: 'blog', type: 2 },
         ],
     },
     {
@@ -42,7 +126,29 @@ export const bash_navigation_list = [
         path: 'blog',
         type: 2,
         root: false,
-        children: [{ id: 1, name: 'test', type: 1 }],
+        children: [
+            {
+                id: 1,
+                path: 'programming',
+                type: 2,
+                children: [
+                    {
+                        id: 1,
+                        path: 'javascript',
+                        type: 2,
+                        children: [{ id: 1, name: 'javascript', type: 1 }],
+                    },
+                    {
+                        id: 2,
+                        path: 'nodejs',
+                        type: 2,
+                        children: [{ id: 1, name: 'node', type: 1 }],
+                    },
+                ],
+            },
+            { id: 2, path: 'data_structures', type: 2, children: [] },
+            { id: 3, path: 'algorithms', type: 2, children: [] },
+        ],
     },
 ];
 

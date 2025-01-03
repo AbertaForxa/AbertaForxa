@@ -2,7 +2,31 @@ import { Cursor } from './sripts/Cursor.js';
 import { Helper } from './sripts/Helper.js';
 import { InputCommands } from './sripts/InputCommands.js';
 import { Vim } from './sripts/Vim.js';
-import { bash_commands, help_commands_list } from './utils/bash.js';
+import {
+    bash_commands,
+    help_commands_list,
+    TERMINAL_NAVIGATION,
+} from './utils/bash.js';
+
+function get_current_node_from_storage() {
+    const currentPath = localStorage.getItem('current_path');
+    if (!currentPath) return TERMINAL_NAVIGATION[0];
+    const { path, level } = JSON.parse(currentPath);
+
+    const foundNode = Helper.find_node_by_path_and_level(
+        path,
+        level,
+        TERMINAL_NAVIGATION[0],
+    );
+    return foundNode || TERMINAL_NAVIGATION[0];
+}
+
+function set_current_node_in_storage(node) {
+    localStorage.setItem(
+        'current_path',
+        JSON.stringify({ path: node.path, level: node.level }),
+    );
+}
 
 document.addEventListener('DOMContentLoaded', function () {
     try {
@@ -11,26 +35,24 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error(error.message);
     }
 
+    Helper.build_tree_with_parents(TERMINAL_NAVIGATION[0]);
+
     Helper.animate_progress_bar();
     Helper.always_focus_on_command_input();
-
-    let firstLoad = true;
-    if (firstLoad) {
-        const current_path = InputCommands.get_current_path();
-        const path = document.getElementById('path');
-        path.textContent =
-            current_path.path === '~'
-                ? current_path.path
-                : `~/${current_path.path}`;
-        firstLoad = false;
-    }
+    const currentNode = get_current_node_from_storage();
+    document.getElementById('path').textContent =
+        Helper.get_full_path_string(currentNode);
 
     window.addEventListener(
         'storage',
         function () {
             const current_path = localStorage.getItem('current_path');
             if (!current_path) {
-                InputCommands.set_current_path('~');
+                //InputCommands.set_current_path('~');
+                localStorage.setItem(
+                    'current_path',
+                    JSON.stringify({ path: '~', level: 1 }),
+                );
                 const path = document.getElementById('path');
                 path.textContent = '~';
             }
@@ -51,12 +73,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 const current_path = JSON.parse(
                     localStorage.getItem('current_path'),
                 );
+                const currentPath = Helper.find_node_by_path_and_level(
+                    current_path.path,
+                    current_path.level,
+                    TERMINAL_NAVIGATION[0],
+                );
 
-                const result = current_path.children.find((obj) =>
-                    obj.name.includes(splited_command[1]),
+                const result = currentPath.children.find(
+                    (obj) =>
+                        obj.path?.includes(splited_command[1]) ||
+                        obj.name?.includes(splited_command[1]),
                 );
                 if (result) {
-                    this.textContent = `${splited_command[0]} ${result.name}`;
+                    this.textContent = `${splited_command[0]} ${result.path || result.name}`;
                 }
             }
         }
@@ -87,17 +116,18 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function add_executed_command(command) {
-    const current_path = InputCommands.get_current_path();
+    const currentNode = get_current_node_from_storage();
+    const fullPathString = Helper.get_full_path_string(currentNode);
+
     const div = `
         <div class="last-command">
             <div class="path-content">
                 <span class="user">aberta_forxa</span>
-                <span class="path">${current_path.path === '~' ? current_path.path : `~/${current_path.path}`}</span>
+                <span class="path">${fullPathString}</span>
                 <span>$</span>
             </div>
             <span>${command}</span>
         </div>
-
     `;
 
     const output = document.getElementById('output');
@@ -128,7 +158,7 @@ function create_tr_content(list) {
             const owner = 'abertaforxa';
             const group = 'stuff';
             const size = 'xxx';
-            const name = content.name;
+            const name = content.path ?? content.name;
 
             return `
             <tr>
@@ -147,11 +177,16 @@ function create_tr_content(list) {
 function execute_ls_command(argument) {
     const storage_path = localStorage.getItem('current_path');
     const currentPathParsed = JSON.parse(storage_path);
+    const currentPath = Helper.find_node_by_path_and_level(
+        currentPathParsed.path,
+        currentPathParsed.level,
+        TERMINAL_NAVIGATION[0],
+    );
 
     const output = document.getElementById('output');
 
     if (argument && ['-la', '-l', '-ll'].includes(argument)) {
-        const trContent = create_tr_content(currentPathParsed.children);
+        const trContent = create_tr_content(currentPath.children);
         const table = `
             <table>
                 <tbody>
@@ -165,9 +200,9 @@ function execute_ls_command(argument) {
         const container = document.createElement('div');
         container.classList.add('ls-container');
 
-        currentPathParsed.children.forEach((child) => {
+        currentPath.children.forEach((child) => {
             const span = document.createElement('span');
-            span.textContent = child.name;
+            span.textContent = child.path ?? child.name;
             container.appendChild(span);
         });
 
@@ -196,23 +231,34 @@ function execute_clear_command() {
 }
 
 function execute_cd_command(argument) {
-    if (argument === undefined) {
-        InputCommands.set_current_path('~');
-        const path = document.getElementById('path');
-        path.textContent = '~';
+    if (!argument) {
+        const rootNode = TERMINAL_NAVIGATION[0];
+        set_current_node_in_storage(rootNode);
+        document.getElementById('path').textContent = rootNode.path;
+        return;
     }
-    if (argument) {
-        const current_path = JSON.parse(localStorage.getItem('current_path'));
-        console.log(current_path);
 
-        current_path.children.forEach((nav) => {
-            if (nav.name === argument && nav.type === 2) {
-                InputCommands.set_current_path(argument);
-                const path = document.getElementById('path');
-                path.textContent = '~/' + argument;
-            }
-        });
+    const currentNode = get_current_node_from_storage();
+    if (argument.trim() === '..') {
+        if (currentNode.parent) {
+            set_current_node_in_storage(currentNode.parent);
+            document.getElementById('path').textContent =
+                Helper.get_full_path_string(currentNode.parent);
+        }
+        return;
     }
+
+    if (!currentNode.children || currentNode.children.length === 0) return;
+
+    const foundChild = currentNode.children.find((child) => {
+        return child.type === 2 && child.path === argument.trim();
+    });
+
+    if (!foundChild) return;
+
+    set_current_node_in_storage(foundChild);
+    document.getElementById('path').textContent =
+        Helper.get_full_path_string(foundChild);
 }
 
 function execute_help_command() {
@@ -249,10 +295,15 @@ function execute_vim_command(executed_command, argument) {
     const current_path = localStorage.getItem('current_path');
     const parsedCurrentPath = JSON.parse(current_path);
 
-    const isFileExist = parsedCurrentPath.children.some(
+    const currentPath = Helper.find_node_by_path_and_level(
+        parsedCurrentPath.path,
+        parsedCurrentPath.level,
+        TERMINAL_NAVIGATION[0],
+    );
+
+    const isFileExist = currentPath.children.some(
         (post) => post.name === argument.trim(),
     );
 
     if (isFileExist) Vim.show_modal(argument);
-    //Vim.show_modal(argument);
 }
