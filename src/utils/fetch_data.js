@@ -1,6 +1,6 @@
-export async function fetch_blog(file_name) {
+export async function fetch_data(file_name) {
     try {
-        const req = await fetch(`/posts/${file_name}.md`);
+        const req = await fetch(`${file_name}.md`);
         if (!req.ok) throw new Erro('Fetch failed...');
 
         const text = await req.text();
